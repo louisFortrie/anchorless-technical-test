@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+
+# IDE
+.vscode/
+.DS_Store
+
+# OS
+Thumbs.db
+.DS_Store
