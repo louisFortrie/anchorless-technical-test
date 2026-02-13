@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use APP\Enums\FileStatus;
+use App\Enums\FileStatus;
 
 class File extends Model
 {
@@ -19,5 +19,6 @@ class File extends Model
         'storage_name',
         'size',
         'mime_type',
+        'storage_path',
     ];
 }

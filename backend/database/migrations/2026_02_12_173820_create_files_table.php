@@ -16,6 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('original_name');
             $table->string('storage_name');
+            $table->string('storage_path');
             $table->unsignedBigInteger('size');
             $table->string('mime_type');
             $table->enum('status', ['uploaded', 'approved', 'disapproved',  'in review'])->default('uploaded');
