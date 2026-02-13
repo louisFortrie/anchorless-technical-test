@@ -9,7 +9,10 @@
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "cd backend && php artisan serve",
-    "dev:frontend": "cd frontend && npm run dev"
+    "dev:frontend": "cd frontend && npm run dev",
+    "install:backend": "cd backend && composer install",
+    "install:frontend": "cd frontend && npm install",
+    "install": "npm i && npm run install:backend && npm run install:frontend"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
