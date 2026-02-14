@@ -7,7 +7,7 @@ import {
   ScrollRestoration,
 } from "react-router";
 import { FilesProvider } from "./context/FilesContext";
-
+import {Toaster} from 'sonner'
 import type { Route } from "./+types/root";
 import "./app.css";
 
@@ -37,6 +37,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
          <FilesProvider>
             {children}
+            <Toaster position="top-right" />
             <ScrollRestoration />
             <Scripts />
          </FilesProvider>

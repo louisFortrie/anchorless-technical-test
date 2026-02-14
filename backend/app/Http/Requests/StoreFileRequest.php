@@ -32,13 +32,13 @@ class StoreFileRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'file.required' => 'Le fichier est obligatoire.',
-            'file.file' => 'Le champ envoyé doit être un fichier valide.',
-            'file.mimes' => 'Formats autorisés : PDF, PNG, JPG.',
-            'file.max' => 'Le fichier dépasse la taille maximale autorisée (4 Mo).',
-            'file.uploaded' => 'Le fichier n\'a pas pu être uploadé (limite serveur atteinte : upload_max_filesize/post_max_size).',
-            'category.required' => 'La catégorie est obligatoire.',
-            'category.in' => 'La catégorie doit être l\'une des valeurs suivantes : Identity, Legal, Supporting.',
+            'file.required' => 'The file field is required.',
+            'file.file' => 'The uploaded field must be a valid file.',
+            'file.mimes' => 'Allowed formats: PDF, PNG, JPG.',
+            'file.max' => 'The file exceeds the maximum allowed size (4 MB).',
+            'file.uploaded' => 'The file could not be uploaded (server limit reached: upload_max_filesize/post_max_size).',
+            'category.required' => 'The category field is required.',
+            'category.in' => 'The category must be one of the following values: Identity, Legal, Supporting.',
         ];
     }
 

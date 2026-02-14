@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import type { FilesByCategory, FilesResponse } from "../types/file";
+import {toast} from 'sonner';
 
 const EMPTY_FILES_RESPONSE: FilesByCategory = {
   Identity: [],
@@ -19,6 +20,7 @@ export function useFiles() {
       }
     } catch (error) {
       console.error("Error fetching files:", error);
+      toast.error("Error fetching files");
     }
   }, []);
 
@@ -34,16 +36,18 @@ export function useFiles() {
       });
 
       if (response.ok) {
+        toast.success("File uploaded successfully");
         await fetchFiles();
       }
     } catch (error) {
       console.error("Error uploading file:", error);
+      toast.error("Error uploading file");
     }
   }, [fetchFiles]);
 
   const deleteFile = useCallback(async (id: number) => {
-    const ok = window.confirm("Are you sure you want to delete this file?");
-    if (!ok) return;
+    // const ok = window.confirm("Are you sure you want to delete this file?");
+    // if (!ok) return;
 
     try {
       const response = await fetch(`http://localhost:8000/api/files/${id}`, {
@@ -51,10 +55,12 @@ export function useFiles() {
       });
 
       if (response.ok) {
+        toast.success("File deleted successfully");
         await fetchFiles();
       }
     } catch (error) {
       console.error("Error deleting file:", error);
+      toast.error("Error deleting file");
     }
   }, [fetchFiles]);
 
