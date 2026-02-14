@@ -5,13 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\FileStatus;
+use App\Enums\FileCategory;
 
 class File extends Model
 {
     /** @use HasFactory<\Database\Factories\FileFactory> */
     use HasFactory;
     protected $casts = [
-        'status' => FileStatus::class
+        'status' => FileStatus::class,
+        'category' => FileCategory::class,
     ];
 
     protected $fillable = [
@@ -20,5 +22,7 @@ class File extends Model
         'size',
         'mime_type',
         'storage_path',
+        'status',
+        'category',
     ];
 }

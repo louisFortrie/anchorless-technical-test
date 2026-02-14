@@ -13,18 +13,12 @@ class FileController extends Controller
 {
     public function index(): JsonResponse
     {
-        $filesByStatus = File::latest()
-            ->select(['status', 'original_name', 'size', 'created_at'])
+        $filesByCategory = File::latest()
+            ->select(['status', 'original_name', 'size', 'created_at', 'category', 'id'])
             ->get()
-            ->groupBy(fn($file) => $file->status?->value ?? (string) $file->status)
-            ->map(fn($files) => $files->map(fn($file) => [
-                'created_at' => $file->created_at,
-                'original_name' => $file->original_name,
-                'size' => $file->size,
-                'status' => $file->status,
-            ])->values());
+            ->groupBy(fn($file) => $file->category?->value ?? (string) $file->category);
 
-        return response()->json(['files' => $filesByStatus], 200);
+        return response()->json(['files' => $filesByCategory], 200);
     }
 
     public function store(StoreFileRequest $request): JsonResponse
@@ -51,6 +45,7 @@ class FileController extends Controller
                 'size' => $uploadedFile->getSize(),
                 'mime_type' => $uploadedFile->getMimeType(),
                 'status' => 'uploaded',
+                'category' => $validated['category'],
             ]);
 
             return response()->json([
@@ -66,6 +61,7 @@ class FileController extends Controller
 
             return response()->json([
                 'message' => 'Unexpected error while uploading file.',
+                "error" => $e->getMessage(),
             ], 500);
         }
     }

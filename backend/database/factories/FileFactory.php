@@ -6,6 +6,7 @@ use App\Enums\FileStatus;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use App\Enums\FileCategory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\File>
@@ -26,13 +27,14 @@ class FileFactory extends Factory
             'storage_path' => 'uploads/' . $storageName,
             'size' => 0,
             'mime_type' => 'text/plain',
-            'status' => 'uploaded',
+            'status' => FileStatus::UPLOADED,
+            'category' => FileCategory::IDENTITY,
         ];
     }
 
-    public function fixture(string $filename, string $mimeType, FileStatus $status): static
+    public function fixture(string $filename, string $mimeType, FileStatus $status, FileCategory $category): static
     {
-        return $this->state(function () use ($filename, $mimeType, $status) {
+        return $this->state(function () use ($filename, $mimeType, $status, $category) {
             $sourcePath = database_path('fixtures/' . $filename);
             $storageName = Str::uuid() . '-' . $filename;
             $storagePath = 'uploads/' . $storageName;
@@ -51,6 +53,7 @@ class FileFactory extends Factory
                 'size' => $size,
                 'mime_type' => $mimeType,
                 'status' => $status,
+                'category' => $category,
             ];
         });
     }

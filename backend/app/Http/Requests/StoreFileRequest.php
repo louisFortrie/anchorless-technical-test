@@ -25,6 +25,7 @@ class StoreFileRequest extends FormRequest
     {
         return [
             'file' => 'required|file|mimes:pdf,png,jpg|max:4000',
+            'category' => 'required|in:Identity,Legal,Supporting',
         ];
     }
 
@@ -36,6 +37,8 @@ class StoreFileRequest extends FormRequest
             'file.mimes' => 'Formats autorisés : PDF, PNG, JPG.',
             'file.max' => 'Le fichier dépasse la taille maximale autorisée (4 Mo).',
             'file.uploaded' => 'Le fichier n\'a pas pu être uploadé (limite serveur atteinte : upload_max_filesize/post_max_size).',
+            'category.required' => 'La catégorie est obligatoire.',
+            'category.in' => 'La catégorie doit être l\'une des valeurs suivantes : Identity, Legal, Supporting.',
         ];
     }
 
