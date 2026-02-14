@@ -1,60 +1,46 @@
 import { useState } from 'react';
+import { useFilesContext } from "../../context/FilesContext";
+
 import type { FileCategory } from '~/types/file';
 
-interface UploadFormProps {
-    onFileSubmit?: (file: File) => void;
-}
 
-export function UploadForm({ onFileSubmit }: Readonly<UploadFormProps>) {
+export function UploadForm() {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [category, setCategory] = useState<FileCategory>('Identity');
     const [isUploading, setIsUploading] = useState(false);
+    const { postFile } = useFilesContext();
 
-    const MAX_FILE_SIZE = 4 * 1024 * 1024; // 5MB
+    const MAX_FILE_SIZE = 4  * 1024 * 1024; // 4MB
+    
 
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.[0]) {
             const file = e.target.files[0];
+            console.log("max size", MAX_FILE_SIZE, "file size", file.size);
             if (file.size > MAX_FILE_SIZE) {
-                alert("File size exceeds 5MB limit.");
+                alert("File size exceeds 4MB limit.");
                 return;
             }
             setSelectedFile(file);
         }
     };
 
+
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!selectedFile) return;
-
         setIsUploading(true);
-        try {
-            // Envoi au backend
-            const formData = new FormData();
-            formData.append('file', selectedFile);
-            formData.append('category', category);
-
-            const response = await fetch('http://localhost:8000/api/files', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (response.ok) {
-                onFileSubmit?.(selectedFile);
-                setSelectedFile(null);
-            }
-        } catch (error) {
-            console.error('Upload error:', error);
-        } finally {
-            setIsUploading(false);
-        }
+        await postFile(selectedFile, category);
+        setSelectedFile(null);
+        setIsUploading(false);
     };
 
     const formatFileSize = (bytes: number) => {
-        if (bytes < 1024) return bytes + ' B';
-        if (bytes < 1048576) return (bytes / 1024).toFixed(2) + ' KB';
-        return (bytes / 1048576).toFixed(2) + ' MB';
+        if (bytes < 1024) return bytes + ' b';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' Kb';
+        return (bytes / (1024 * 1024)).toFixed(2) + ' Mb';
     };
 
     return (
@@ -70,15 +56,13 @@ export function UploadForm({ onFileSubmit }: Readonly<UploadFormProps>) {
 
             {selectedFile && (
                 <div className="mb-4 p-3 bg-gray-100 rounded">
-                    {selectedFile.type.startsWith('image/') ? (
+                    {selectedFile.type.startsWith('image/') && (
                         <img
                             src={URL.createObjectURL(selectedFile)
                             }
                             alt="Preview"
                             className="mb-2 max-h-40 object-contain"
                         />
-                    ) : (
-                        <div className="mb-2 p-3 bg-gray-200 rounded text-center">PDF Preview</div>
                     )}
 
                     <p className="text-sm font-semibold text-black">{selectedFile.name}</p>
@@ -87,7 +71,7 @@ export function UploadForm({ onFileSubmit }: Readonly<UploadFormProps>) {
                 </div>
             )}
 
-            <select name="category" id="category" className="mb-4 w-full">
+            <select name="category" id="category" className="mb-4 w-full" value={category} onChange={(e) => setCategory(e.target.value as FileCategory)}>
                 <option value="Identity">Identity</option>
                 <option value="Legal">Legal</option>
                 <option value="Supporting">Supporting</option>
@@ -99,6 +83,13 @@ export function UploadForm({ onFileSubmit }: Readonly<UploadFormProps>) {
                 className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
             >
                 {isUploading ? 'Upload en cours...' : 'Envoyer'}
+                {isUploading && (
+                   <div className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]">
+  <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+   
+  </span>
+</div>
+                )}
             </button>
         </form>
     );

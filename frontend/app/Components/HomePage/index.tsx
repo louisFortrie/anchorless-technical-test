@@ -1,38 +1,20 @@
 import { UploadForm } from "../UploadForm";
-import { useEffect, useState } from "react";
-import type { FileData, FilesByCategory, FilesResponse } from "../../types/file";
+import { useFilesContext } from "../../context/FilesContext";
 import { FileCard } from "../FileCard";
+import { useEffect } from "react";
 
 
 export function HomePage() {
-  const EMPTY_FILES_RESPONSE: FilesByCategory = {
-      Identity: [],
-      Legal: [],
-      Supporting: [],
-  };
-  const [files, setFiles] = useState<FilesByCategory>(EMPTY_FILES_RESPONSE);
+  const { files, fetchFiles } = useFilesContext();
       
-  
-  const fetchFiles = async () => {
-    try {
-      const response = await fetch('http://localhost:8000/api/files');
-      if (response.ok) {
-        const data: FilesResponse = await response.json();
-         setFiles(data.files || EMPTY_FILES_RESPONSE);
-        console.log( data.files)
-      }
-    } catch (error) {
-      console.error('Error fetching files:', error);
-    }
-  };
-
   useEffect(() => {
     fetchFiles();
-  }, []);
+  }, [fetchFiles]);
+ 
 
   return (
     <main className="p-6">
-  <UploadForm onFileSubmit={fetchFiles} />
+  <UploadForm/>
   
   <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     <div>
@@ -40,8 +22,7 @@ export function HomePage() {
       {files.Identity && files.Identity.length > 0 ? (
       files.Identity.map((file) => (
        <FileCard
-          onFileDeleted={fetchFiles}
-          key={file.created_at}
+          key={file.id}
           name={file.original_name}
           size={file.size}
           status={file.status}
@@ -58,9 +39,8 @@ export function HomePage() {
       {files.Legal && files.Legal.length > 0 ? (
         files.Legal.map((file) => (
           <FileCard
-            onFileDeleted={fetchFiles}
           id={file.id}
-            key={file.created_at}
+            key={file.id}
             name={file.original_name}
             size={file.size}
             status={file.status}
@@ -77,9 +57,8 @@ export function HomePage() {
         files.Supporting.map((file) => (
           <FileCard
 
-            onFileDeleted={fetchFiles}
             id={file.id}
-            key={file.created_at}
+            key={file.id}
             name={file.original_name}
             size={file.size}
             status={file.status}
