@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\FileStatus;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -29,9 +30,9 @@ class FileFactory extends Factory
         ];
     }
 
-    public function fixture(string $filename, string $mimeType): static
+    public function fixture(string $filename, string $mimeType, FileStatus $status): static
     {
-        return $this->state(function () use ($filename, $mimeType) {
+        return $this->state(function () use ($filename, $mimeType, $status) {
             $sourcePath = database_path('fixtures/' . $filename);
             $storageName = Str::uuid() . '-' . $filename;
             $storagePath = 'uploads/' . $storageName;
@@ -49,7 +50,7 @@ class FileFactory extends Factory
                 'storage_path' => $storagePath,
                 'size' => $size,
                 'mime_type' => $mimeType,
-                'status' => 'uploaded',
+                'status' => $status,
             ];
         });
     }

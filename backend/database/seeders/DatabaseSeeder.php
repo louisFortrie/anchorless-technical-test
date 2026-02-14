@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\File;
+use App\Enums\FileStatus;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,7 +16,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        File::factory()->fixture('demo-1.pdf', 'application/pdf')->create();
-        File::factory()->fixture('demo-2.png', 'image/png')->create();
+        File::factory()->fixture('demo-1.pdf', 'application/pdf', FileStatus::IN_REVIEW)->create();
+        File::factory()->fixture('demo-2.png', 'image/png', FileStatus::UPLOADED)->create();
+        File::factory()->fixture('demo-1.pdf', 'application/pdf', FileStatus::APPROVED)->create();
     }
 }
